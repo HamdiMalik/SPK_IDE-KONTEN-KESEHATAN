@@ -1,4 +1,10 @@
-/saved_models/indobert_sentiment
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Model IndoBERTweet
+saved_models/
 
 # Python cache
 __pycache__/
