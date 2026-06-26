@@ -1,0 +1,18 @@
+/saved_models/indobert_sentiment
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+
+# Docker
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+*:Zone.Identifier

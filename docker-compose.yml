@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:15-alpine
+    container_name: spk_kesehatan_db
+
+    environment:
+      POSTGRES_DB:       db_kesehatan
+      POSTGRES_USER:     hamdi_admin
+      POSTGRES_PASSWORD: rahasia_password123
+      PGDATA:            /var/lib/postgresql/data/pgdata
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./data_source/data_labeled.csv:/var/lib/postgresql/data_labeled.csv:ro
+      - postgres_data:/var/lib/postgresql/data/pgdata
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "pg_isready -U hamdi_admin -d db_kesehatan"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spk_kesehatan_backend
+
+    ports:
+      - "5000:5000"
+
+    environment:
+      FLASK_APP:    app.py
+      FLASK_ENV:    development
+      PORT:         "5000"
+      DATABASE_URL: postgresql://hamdi_admin:rahasia_password123@db:5432/db_kesehatan
+
+    volumes:
+      - ./saved_models:/app/saved_models:ro
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
