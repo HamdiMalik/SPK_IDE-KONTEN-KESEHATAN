@@ -4,7 +4,7 @@ env/
 .venv/
 
 # Model IndoBERTweet
-saved_models/
+saved_models/indobert_sentiment/
 
 # Python cache
 __pycache__/
